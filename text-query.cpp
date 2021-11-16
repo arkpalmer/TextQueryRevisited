@@ -68,7 +68,7 @@ Text_query::Text_query(std::ifstream &file) :
     }
 }
 
-Query_result Text_query::query(std::string &str)
+Query_result Text_query::query(const std::string &str) const
 {
     static std::shared_ptr<std::set<line_no_t>> no_data(new std::set<line_no_t>);
 
@@ -80,7 +80,12 @@ Query_result Text_query::query(std::string &str)
         return Query_result(str, no_data, file_);
     }
 
-    return Query_result(str, wm_[str], file_);
+    auto loc = wm_.find(str);
+
+    // this fails to compile, wm_[str] is a member of Text_query and could be modified (I'm not certain 
+    // of the exact problem, I tried a few things but couldn't fix it so used what the book has - fail)
+    //return Query_result(str, wm_[str], file_);
+    return Query_result(str, loc->second, file_);
 
     //Query_result res(str, wm_[str], file_);
     //return res;

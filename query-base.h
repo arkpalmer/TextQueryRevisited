@@ -42,3 +42,22 @@ private:
     // rep is a string representation of the query
     virtual std::string rep() const = 0;
 };
+
+//
+// looks for a given string. it is the only operation which actually performs 
+// a query on the given Text_query object
+//
+class Word_query : public Query_base
+{
+//public:
+    friend class Query; // Query uses the Word_query ctor
+
+    Word_query(const std::string& s) : query_word_(s) { }
+
+    Query_result eval(const Text_query&) const override;
+
+    std::string rep() const override;
+
+private:
+    std::string query_word_; // word for which to search
+};
