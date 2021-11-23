@@ -3,6 +3,7 @@
 #include <string>
 
 #include "text-query.h"
+#include "query-base.h"
 
 using namespace std;
 
@@ -12,10 +13,18 @@ using namespace std;
 int main()
 {
     cout << "main" << endl;
-    return 0;
+//    return 0;
     std::ifstream file("text.txt");
 
     Text_query text_query(file);
+
+    Query q = Query("two");
+
+    auto res2 = q.eval(text_query);
+
+    print(cout, res2);
+
+    return 0;
 
 // NEXT do the loop then answer 16.23
     std::string s("two");
