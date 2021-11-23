@@ -20,7 +20,7 @@ public:
 
     Text_query(std::ifstream& file);
 
-    Query_result query(std::string& str);
+    Query_result query(const std::string& str) const;
 
 private:
     std::shared_ptr<stored_file_t> file_; // contents of file
