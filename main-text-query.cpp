@@ -24,8 +24,10 @@ int main()
 
     print(cout, res2);
     
-    Query q2 = ~q; // this should call upon Not_query (I think)
+    Query qn = ~q; // this should call upon Not_query (I think)
     // later, could also do something like: qa & ~qb (again, I think)
+
+    auto resnq = qn.eval(text_query);
 
     return 0;
 
