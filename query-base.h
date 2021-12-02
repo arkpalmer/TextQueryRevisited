@@ -74,7 +74,7 @@ public:
 
     // interface functions: call the corresponding Query_base operations
     Query_result eval(const Text_query& t) const;
-    //std::string rep() const;
+    std::string rep() const { return q_->rep(); }
 
 private:
     Query(std::shared_ptr<Query_base> q) : q_(q) {}
@@ -97,22 +97,14 @@ class Not_query : public Query_base
     Query query_;
 
     // TODO
-    Query_result eval(const Text_query&) const override { return Query_result(); } 
+    Query_result eval(const Text_query&) const override;
 
     // returns the string that this word query represents (n.b. not the result of the query)
-    std::string rep() const override { return "TODO"; }
+    std::string rep() const override { return "~(" + query_.rep() + ")"; }
 };
 
 inline Query operator~(const Query& query)
 {
-    // Query(const std::string& s) : q_(new Word_query(s)) {} // builds a new Word_query
-    // ??? how do I create a query which points to a Not_query? 
-    //     the query ctor creates a Word_query ==> you don't, it has a Query which it negates
-
-    // Query(std::shared_ptr<Query_base>& q)
-
-// really not getting much value out of this whole exercise, it's so poorly documented...
-    // doesn't work - says ctor is private return Query(std::make_shared<Not_query>(query));
     return std::shared_ptr<Query_base>(new Not_query(query));
 }
 

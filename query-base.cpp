@@ -22,3 +22,19 @@ std::string Word_query::rep() const
 {
     return (query_word_);
 }
+
+Query_result Not_query::eval(const Text_query& tq) const 
+{ 
+    // Text_query stuff:
+    // Query_result query(const std::string& str) const;
+    //
+    // private:
+    // std::shared_ptr<stored_file_t> file_; // contents of file
+    // std::map<std::string, std::shared_ptr<std::set<line_no_t>>> wm_;
+    //
+    //auto res = q_->
+
+    auto initial_res = query_.eval(tq);
+
+    return initial_res;
+}
