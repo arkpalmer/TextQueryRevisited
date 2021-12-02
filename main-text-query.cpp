@@ -24,8 +24,14 @@ int main()
 
     print(cout, res2);
     
-    Query q2 = ~q; // this should call upon Not_query (I think)
+    auto qn = ~q; // this should call upon Not_query (I think)
     // later, could also do something like: qa & ~qb (again, I think)
+
+    auto resnq = qn.eval(text_query);
+
+    std::cout << qn.rep() << endl;
+
+    print(cout, resnq); //test 2
 
     return 0;
 

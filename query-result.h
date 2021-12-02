@@ -13,7 +13,7 @@ class Query_result
 public:
     friend std::ostream& print(std::ostream& os, Query_result& qr);
 
-    Query_result() : sought_("temp, remove this ctor") {}
+    Query_result() : sought_("temp, remove this ctor") { std::cout << "temp, remove this ctor" << std::endl;}
 
     Query_result(const std::string& sought,
                  std::shared_ptr<std::set<line_no_t>> lines,
