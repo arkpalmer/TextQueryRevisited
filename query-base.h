@@ -63,7 +63,7 @@ private:
     // they create Not_query, Or_query and And_query respectively
     // 
     friend Query operator~(const Query&);
-    //friend Query operator|(const Query&, const Query&);
+    friend Query operator|(const Query&, const Query&);
     //friend Query operator&(const Query&, const Query&);
 
 public:
@@ -103,8 +103,35 @@ class Not_query : public Query_base
     std::string rep() const override { return "~(" + query_.rep() + ")"; }
 };
 
+class Or_query : public Query_base
+{
+    // I guess this operator needs access to Or_query's ctor (?tbc) 
+    friend Query operator|(const Query&, const Query&);
+
+    Or_query(const Query& lhs_query, const Query& rhs_query) :
+        lhs_query_(lhs_query),
+        rhs_query_(rhs_query)
+    {}
+
+    // holds a Query object, which it negates via eval
+    Query lhs_query_;
+    Query rhs_query_;
+
+    // TODO
+    Query_result eval(const Text_query&) const override;
+
+    // returns the string that this word query represents (n.b. not the result of the query)
+    std::string rep() const override { return "(" + lhs_query_.rep() + "|" + rhs_query_.rep() + ")"; }
+};
+
+
 inline Query operator~(const Query& query)
 {
     return std::shared_ptr<Query_base>(new Not_query(query));
+}
+
+inline Query operator|(const Query& lhs_query, const Query& rhs_query)
+{
+    return std::shared_ptr<Query_base>(new Or_query(lhs_query, rhs_query));
 }
 
