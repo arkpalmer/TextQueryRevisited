@@ -18,10 +18,11 @@ int main()
 
     Text_query text_query(file);
 
-    Query q = Query("two");
+    Query q = Query("there");
 
     auto res2 = q.eval(text_query);
 
+    cout << "output of Query q:" << endl;
     print(cout, res2);
     
     auto qn = ~q; // this should call upon Not_query (I think)
@@ -31,6 +32,7 @@ int main()
 
     std::cout << qn.rep() << endl;
 
+    cout << "output of Query qn:" << endl;
     print(cout, resnq); //test 2
 
     return 0;
