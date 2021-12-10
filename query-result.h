@@ -20,6 +20,12 @@ public:
                  std::shared_ptr<stored_file_t> file) :
                  sought_(sought), lines_(lines), file_(file) {}
 
+    //std::set<line_no_t>::iterator begin() { return lines_->begin(); }
+    auto begin() { return lines_->begin(); }
+    auto end()   { return lines_->end(); }
+
+    auto get_file() { return file_; }
+
 private:
     std::string sought_;
     std::shared_ptr<std::set<line_no_t>> lines_;

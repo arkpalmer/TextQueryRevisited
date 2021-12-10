@@ -63,8 +63,8 @@ private:
     // they create Not_query, Or_query and And_query respectively
     // 
     friend Query operator~(const Query&);
-    //friend Query operator|(const Query&, const Query&);
-    //friend Query operator&(const Query&, const Query&);
+    friend Query operator|(const Query&, const Query&);
+    friend Query operator&(const Query&, const Query&);
 
 public:
     // this works but using make_shared in .cpp version of ctor didn't (private in context error)
@@ -103,8 +103,62 @@ class Not_query : public Query_base
     std::string rep() const override { return "~(" + query_.rep() + ")"; }
 };
 
+class Binary_query : public Query_base
+{
+protected:
+    Binary_query(const Query& lhs_query, const Query& rhs_query, const std::string& op_str) :
+        lhs_query_(lhs_query),
+        rhs_query_(rhs_query),
+        op_str_(op_str)
+    {}
+
+    Query       lhs_query_;
+    Query       rhs_query_;
+    std::string op_str_;
+
+    Query_result eval(const Text_query&) const override;
+
+    std::string rep() const override { return "(" + lhs_query_.rep() + op_str_ + rhs_query_.rep() + ")"; }
+};
+
+class Or_query : public Binary_query
+{
+    // I guess this operator needs access to Or_query's ctor (?tbc) 
+    friend Query operator|(const Query&, const Query&);
+
+    Or_query(const Query& lhs_query, const Query& rhs_query) :
+        Binary_query(lhs_query, rhs_query, "|")
+    {}
+
+    // returns the string that this word query represents (n.b. not the result of the query)
+    //std::string rep() const override { return "(" + lhs_query_.rep() + "|" + rhs_query_.rep() + ")"; }
+};
+
+class And_query : public Binary_query
+{
+    // I guess this operator needs access to Or_query's ctor (?tbc) 
+    friend Query operator&(const Query&, const Query&);
+
+    And_query(const Query& lhs_query, const Query& rhs_query) :
+        Binary_query(lhs_query, rhs_query, "&")
+    {}
+
+    // returns the string that this word query represents (n.b. not the result of the query)
+    //std::string rep() const override { return "(" + lhs_query_.rep() + "|" + rhs_query_.rep() + ")"; }
+};
+
 inline Query operator~(const Query& query)
 {
     return std::shared_ptr<Query_base>(new Not_query(query));
+}
+
+inline Query operator|(const Query& lhs_query, const Query& rhs_query)
+{
+    return std::shared_ptr<Query_base>(new Or_query(lhs_query, rhs_query));
+}
+
+inline Query operator&(const Query& lhs_query, const Query& rhs_query)
+{
+    return std::shared_ptr<Query_base>(new And_query(lhs_query, rhs_query));
 }
 
