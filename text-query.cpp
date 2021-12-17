@@ -28,10 +28,10 @@ Text_query::Text_query(std::ifstream &file) :
         std::vector<std::string> results(std::istream_iterator<std::string>{iss},
                                          std::istream_iterator<std::string>());
 
+        std::cout << "Text_query ctor, processing line: '" << str << "'" << endl;
+
         for (auto &it : results)
         {
-            std::cout << "results: " << it << endl;
-
             /*
              * non Debug-delete version
              *
@@ -52,11 +52,15 @@ Text_query::Text_query(std::ifstream &file) :
                 wm_.emplace(it, std::shared_ptr<std::set<line_no_t>>(new std::set<line_no_t>));
             }
 
+            std::cout << __func__ << " word in line:" << it << std::endl;
+            //std::cout << "results: " << it << endl;
+            // for a given word, add the line_no to the words line number set
+            // wm_ is <string, sptr<set<line_no>>>
             wm_[it]->insert(line_no);
         }
     }
 
-    std::cout << endl << "ctor wordmap:" << endl;
+    std::cout << endl << "Text_query ctor wordmap:" << endl;
     for (auto& it : wm_)
     {
         std::cout << it.first << " ";
@@ -70,6 +74,8 @@ Text_query::Text_query(std::ifstream &file) :
 
 Query_result Text_query::query(const std::string &str) const
 {
+    cout << "line:" << __LINE__ << " str:" << str << " " << __PRETTY_FUNCTION__ << endl;
+
     static std::shared_ptr<std::set<line_no_t>> no_data(new std::set<line_no_t>);
 
     if (wm_.find(str) == wm_.end())
@@ -85,6 +91,8 @@ Query_result Text_query::query(const std::string &str) const
     // this fails to compile, wm_[str] is a member of Text_query and could be modified (I'm not certain 
     // of the exact problem, I tried a few things but couldn't fix it so used what the book has - fail)
     //return Query_result(str, wm_[str], file_);
+
+    // loc->second is the the set of line numbers containing the word
     return Query_result(str, loc->second, file_);
 
     //Query_result res(str, wm_[str], file_);

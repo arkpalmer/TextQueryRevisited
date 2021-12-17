@@ -17,6 +17,7 @@ int main()
     std::ifstream file("text.txt");
 
     Text_query text_query(file);
+#if 0
 
     Query q = Query("there");
 
@@ -34,11 +35,19 @@ int main()
 
     cout << "output of Query qn:" << endl;
     print(cout, resnq); //test 2
+#endif 
 
     Query q1 = Query("first");
-    Query q4 = Query("fourth");
-    auto q1_or_q4 = (q1 | q4);
+    auto resq1 = q1.eval(text_query);
+    std::cout << q1.rep() << endl;
+    print(cout, resq1);
 
+    Query q4 = Query("fourth");
+    auto resq4 = q4.eval(text_query);
+    std::cout << q4.rep() << endl;
+    print(cout, resq4);
+
+    auto q1_or_q4 = (q1 | q4);
     cout << "output of Query q1_or_q4:" << endl;
     auto r = q1_or_q4.eval(text_query);
     print(cout, r); //test 2

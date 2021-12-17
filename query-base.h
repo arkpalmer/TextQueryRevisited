@@ -116,8 +116,6 @@ protected:
     Query       rhs_query_;
     std::string op_str_;
 
-    Query_result eval(const Text_query&) const override;
-
     std::string rep() const override { return "(" + lhs_query_.rep() + op_str_ + rhs_query_.rep() + ")"; }
 };
 
@@ -129,6 +127,8 @@ class Or_query : public Binary_query
     Or_query(const Query& lhs_query, const Query& rhs_query) :
         Binary_query(lhs_query, rhs_query, "|")
     {}
+
+    Query_result eval(const Text_query&) const override;
 
     // returns the string that this word query represents (n.b. not the result of the query)
     //std::string rep() const override { return "(" + lhs_query_.rep() + "|" + rhs_query_.rep() + ")"; }
@@ -143,6 +143,7 @@ class And_query : public Binary_query
         Binary_query(lhs_query, rhs_query, "&")
     {}
 
+    Query_result eval(const Text_query&) const override;
     // returns the string that this word query represents (n.b. not the result of the query)
     //std::string rep() const override { return "(" + lhs_query_.rep() + "|" + rhs_query_.rep() + ")"; }
 };
